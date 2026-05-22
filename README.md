@@ -1,4 +1,8 @@
 # 🗜️ TokenShrink - Multilingual Prompt Compressor
+![Python](https://img.shields.io/badge/Python-3.13-blue?style=for-the-badge\&logo=python)
+![Streamlit](https://img.shields.io/badge/Streamlit-Framework-ff4b4b?style=for-the-badge\&logo=streamlit\&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-Tiktoken-412991?style=for-the-badge\&logo=openai\&logoColor=white)
 
 TokenShrink is a lightweight, efficient web application designed to optimize and compress AI prompts before sending them to Large Language Models (LLMs) like GPT-4, Gemini, or Claude. By removing redundant greetings, excessive whitespaces, and unnecessary stop words, TokenShrink helps developers and daily AI users save money and reduce API latency.
 
