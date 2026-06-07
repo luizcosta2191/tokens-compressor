@@ -1,0 +1,4 @@
+# Development & test dependencies (not needed in production image)
+-r requirements.txt
+pytest==8.4.2
+pytest-cov==6.1.0
