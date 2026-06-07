@@ -1,122 +1,147 @@
-# 🗜️ TokenShrink - Multilingual Prompt Compressor
-![Python](https://img.shields.io/badge/Python-3.13-blue?style=for-the-badge\&logo=python)
-![Streamlit](https://img.shields.io/badge/Streamlit-Framework-ff4b4b?style=for-the-badge\&logo=streamlit\&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)
-![OpenAI](https://img.shields.io/badge/OpenAI-Tiktoken-412991?style=for-the-badge\&logo=openai\&logoColor=white)
+# 🗜️ TokenShrink
 
-TokenShrink is a lightweight, efficient web application designed to optimize and compress AI prompts before sending them to Large Language Models (LLMs) like GPT-4, Gemini, or Claude. By removing redundant greetings, excessive whitespaces, and unnecessary stop words, TokenShrink helps developers and daily AI users save money and reduce API latency.
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.58.0-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)
+![tiktoken](https://img.shields.io/badge/tiktoken-0.13.0-412991?style=flat-square&logo=openai&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-multi--stage-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-67%20passed-22c55e?style=flat-square&logo=pytest&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-f59e0b?style=flat-square)
+![Languages](https://img.shields.io/badge/languages-5-8b5cf6?style=flat-square)
 
-The application features a fully dynamic, bilingual user interface supporting both **English** and **Portuguese**.
-
----
-
-## 🚀 Features
-
-* **Bilingual UI & Logic:** Toggle between English and Portuguese to dynamically update the interface and the text-cleaning algorithms.
-* **Smart Trim:** Automatically strips conversational fluff, courtesies, and greetings (e.g., *"Hello! Please, could you..."* or *"Olá, por favor..."*).
-* **Text Minification:** Flattens double line breaks and excessive trailing spaces.
-* **Edge Cleanup:** Automatically cleans up orphan punctuation marks (`!`, `,`, `.`) left behind after trimming, and automatically capitalizes the final prompt.
-* **Accurate Token Counting:** Uses the official `tiktoken` library (with the `cl100k_base` encoding template used by OpenAI's GPT-4o) to measure real-time savings.
+**Multilingual Prompt Compressor** — a Streamlit app that removes greetings, redundant phrases, duplicate sentences, and unnecessary connectives from prompts before you send them to an AI model, saving tokens and reducing API costs.
 
 ---
 
-## 📁 Project Structure
+## Features
 
-The repository is organized following containerization standards, making it ready for production deployment:
+- **5 languages supported:** English, Portuguese, Spanish, French, and German
+- **4 compression filters**, each independently toggleable:
+  - Remove greetings and sign-offs
+  - Normalize spaces and empty lines
+  - Remove redundant connectives
+  - Remove redundant phrases and duplicate sentences
+- **Token counter** using `tiktoken` with 4 tokenizer options (`cl100k_base`, `p50k_base`, `gpt2`, `r50k_base`)
+- **Cost estimator** for GPT-4o, GPT-4o mini, Claude 3.5 Sonnet, Claude 3 Haiku, and Claude 3.7 Sonnet
+- **Side-by-side diff** showing original vs. optimized prompt
+- **One-click copy** via a code block rendered below the result
+- **Compression progress bar** with percentage saved
+- **Session history** — last 5 compressions kept in memory
 
-```text
+---
+
+## Project Structure
+
+```
+tokenshrink/
 ├── src/
-│   └── streamlit_app.py   # Main Application source code
-├── .gitattributes         # Git configuration attributes
-├── Dockerfile             # Production Docker container blueprint
-├── README.md              # Project documentation
-└── requirements.txt       # Python dependencies
+│   └── streamlit_app.py    # Application source
+├── tests/
+│   └── test_tokenshrink.py # Pytest suite (67 tests)
+├── Dockerfile              # Multi-stage production image
+├── requirements.txt        # Runtime dependencies (pinned)
+├── requirements-dev.txt    # Dev/test dependencies (pinned)
+└── README.md
 ```
 
 ---
 
-## 🛠️ Local Installation & Setup
+## Getting Started
 
-To run this project locally on your machine, follow these steps:
-
-### Prerequisites
-
-Make sure you have Python 3.10+ installed.
-
-### 1. Clone the repository
+### Running locally
 
 ```bash
-git clone https://github.com/luizcosta2191/tokens-compressor.git
-cd tokens-compressor
-```
-
-### 2. Install dependencies
-
-It is recommended to use a virtual environment:
-
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
+# 1. Install runtime dependencies
 pip install -r requirements.txt
-```
 
-### 3. Run the application
-
-```bash
+# 2. Launch the app
 streamlit run src/streamlit_app.py
 ```
 
-The app will automatically open in your default browser at:
+The app will be available at `http://localhost:8501`.
 
-```text
-http://localhost:8501
-```
-
----
-
-## 🐳 Running with Docker
-
-This project includes a lightweight Dockerfile based on `python:3.13.5-slim`.
-
-To build and run the containerized version:
+### Running with Docker
 
 ```bash
-# Build the Docker image
-docker build -t tokenshrink:latest .
+# Build the image
+docker build -t tokenshrink .
 
 # Run the container
-docker run -p 8501:8501 tokenshrink:latest
+docker run -p 8501:8501 tokenshrink
 ```
 
-Access the application via:
+Then open `http://localhost:8501` in your browser.
 
-```text
-http://localhost:8501
+---
+
+## Running Tests
+
+```bash
+# Install dev dependencies
+pip install -r requirements-dev.txt
+
+# Run the full test suite
+pytest tests/ -v
+
+# Run with coverage report
+pytest tests/ -v --cov=src --cov-report=term-missing
+```
+
+All 67 tests should pass with no network access required — the tokenizer is mocked in unit tests.
+
+---
+
+## Dependencies
+
+| Package | Version | Purpose |
+|---|---|---|
+| `streamlit` | 1.58.0 | UI framework |
+| `tiktoken` | 0.13.0 | Token counting |
+| `pytest` | 8.4.2 | Test runner *(dev only)* |
+| `pytest-cov` | 6.1.0 | Coverage reports *(dev only)* |
+
+---
+
+## How It Works
+
+Each compression pass runs a series of regex substitutions against language-specific rule sets defined in `LANG_RULES`. The pipeline is:
+
+1. **Greeting removal** — strips salutations and sign-offs at the start/end of the prompt
+2. **Connective removal** — replaces verbose connectives (*"in order to"*, *"due to the fact that"*) with a single space
+3. **Phrase removal** — rewrites or removes filler constructions (*"I want you to"*, *"in a clear way"*)
+4. **Deduplication** — drops sentences that appear more than once (case-insensitive), including across newlines
+5. **Whitespace normalization** — collapses multiple spaces and blank lines, optionally preserving paragraph breaks
+
+The result is then capitalised and stripped of any leading punctuation left behind by the removals.
+
+---
+
+## Supported Languages
+
+| Language | Greetings | Connectives | Redundant Phrases |
+|---|---|---|---|
+| English | ✅ | ✅ | ✅ |
+| Portuguese | ✅ | ✅ | ✅ |
+| Spanish | ✅ | ✅ | ✅ |
+| French | ✅ | ✅ | ✅ |
+| German | ✅ | ✅ | ✅ |
+
+---
+
+## Docker Details
+
+The image uses a **multi-stage build** to keep the final artifact lean:
+
+- **Stage `builder`** — installs `build-essential` and compiles Python wheels
+- **Stage `runtime`** — copies only the pre-built wheels and app source; no compiler toolchain included
+
+The container runs as a **non-root user** (`appuser`) and includes a health check against Streamlit's built-in health endpoint:
+
+```
+GET http://localhost:8501/_stcore/health
 ```
 
 ---
 
-## 🌐 Cloud Deployment (Hugging Face Spaces)
+## License
 
-This repository is fully compatible with Hugging Face Spaces Docker templates.
-
-1. Create a new Space on Hugging Face using the Docker SDK.
-2. Push this repository to your Hugging Face space remote.
-3. The platform will automatically build the Dockerfile and host your live application.
-
----
-
-## 🧪 Technologies Used
-
-| Technology  | Purpose                                         |
-| ----------- | ----------------------------------------------- |
-| Python 3.13 | Core programming language                       |
-| Streamlit   | Graphical user interface framework              |
-| Tiktoken    | High-performance BPE tokenizer by OpenAI        |
-| Docker      | Containerization and cloud deployment isolation |
-
----
-
-## 📄 License
-
-This project is open-source and available under the MIT License.
+MIT
